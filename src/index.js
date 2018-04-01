@@ -3,11 +3,29 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class App extends React.Component {
+    constructor() {
+        super();
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = {timepointDepartures: []};
+    }
+
+    handleSubmit(state) {
+        console.log(state);
+        let timepointDepartures = this.state.timepointDepartures;
+        if (!timepointDepartures.includes(state)) {
+            timepointDepartures.push(state);
+        }
+        this.setState({timepointDepartures: timepointDepartures}, () => console.log(this.state));
+    }
+    
     render() {
         return (
             <div>
             <h1>Add a Stop!</h1>
-            <NexTripForm />
+            {/* { TODO: populate <DepartureList> component with timepointDepartures data} */}
+            <NexTripForm onSubmit={this.handleSubmit}/>
             </div>
         );
     }
@@ -20,6 +38,7 @@ class NexTripForm extends React.Component {
         this.handleRouteChange = this.handleRouteChange.bind(this);
         this.handleDirectionChange = this.handleDirectionChange.bind(this);
         this.handleStopChange = this.handleStopChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         
         this.state = {
             route: null,
@@ -43,8 +62,10 @@ class NexTripForm extends React.Component {
         this.setState({stop: stop}, () => console.log(this.state));
     }
 
-    handleSubmit(event) {
-        // TODO
+    handleSubmit(e) {
+        e.preventDefault();
+        console.log("Form Layer");
+        this.props.onSubmit(this.state);
     }
     
     render() {
