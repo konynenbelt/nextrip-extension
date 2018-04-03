@@ -16,13 +16,13 @@ class App extends React.Component {
         if (!departures.includes(state)) {
             departures.push(state);
         }
-        this.setState({departures: departures}, () => console.log(this.state));
+        this.setState({departures: departures}, () => console.log(this.state.departures));
     }
     
     render() {
         return (
             <div>
-            <h1>Add a Stop!</h1>
+            <h1>Nextrip Feed</h1>
             <DepartureList departures={this.state.departures}/>
             <NexTripForm onSubmit={this.handleSubmit}/>
             </div>
@@ -31,10 +31,26 @@ class App extends React.Component {
 }
 
 class DepartureList extends React.Component {
+    // TODO: Fetch time of next departure for each departure element in the array.
+    // May need a timer to periodically refresh data from the service.
+    
     render() {
-        return (
-            <p>DEPARTURES LIST WILL GO HERE</p>
-        );
+        console.log(this.props);
+        console.log(this.props.departures);
+        if (this.props.departures === undefined || this.props.departures.length === 0) {
+            return (
+                <p>Add a stop below to get the latest departures info!</p>
+            )
+        }
+        else {
+            return (
+                <ul>
+                    {this.props.departures.map(x => <li>{x.route}, {x.direction}, {x.stop}</li>)}
+                    {/* TODO: render description rather than value */}
+                    {/* TODO: render time of next departure */}
+                </ul>
+            );
+        }
     }
 }
 
@@ -47,6 +63,8 @@ class NexTripForm extends React.Component {
         this.handleStopChange = this.handleStopChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         
+        // TODO: update state representation to include value/description pairs for each of route, direction, stop, 
+        // this will allow us to render the description to the UI and use the value for making API calls
         this.state = {
             route: null,
             direction: null,
