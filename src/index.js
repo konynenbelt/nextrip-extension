@@ -8,25 +8,32 @@ class App extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        this.state = {timepointDepartures: []};
+        this.state = {departures: []};
     }
 
     handleSubmit(state) {
-        console.log(state);
-        let timepointDepartures = this.state.timepointDepartures;
-        if (!timepointDepartures.includes(state)) {
-            timepointDepartures.push(state);
+        let departures = this.state.departures;
+        if (!departures.includes(state)) {
+            departures.push(state);
         }
-        this.setState({timepointDepartures: timepointDepartures}, () => console.log(this.state));
+        this.setState({departures: departures}, () => console.log(this.state));
     }
     
     render() {
         return (
             <div>
             <h1>Add a Stop!</h1>
-            {/* { TODO: populate <DepartureList> component with timepointDepartures data} */}
+            <DepartureList departures={this.state.departures}/>
             <NexTripForm onSubmit={this.handleSubmit}/>
             </div>
+        );
+    }
+}
+
+class DepartureList extends React.Component {
+    render() {
+        return (
+            <p>DEPARTURES LIST WILL GO HERE</p>
         );
     }
 }
@@ -48,30 +55,26 @@ class NexTripForm extends React.Component {
     }
 
     handleRouteChange(route) {
-        console.log(route);
-        this.setState({route: route}, () => console.log(this.state));
+        this.setState({route: route});
     }
 
     handleDirectionChange(direction) {
-        console.log(direction);
-        this.setState({direction: direction}, () => console.log(this.state));
+        this.setState({direction: direction});
     }
 
     handleStopChange(stop) {
-        console.log(stop);
-        this.setState({stop: stop}, () => console.log(this.state));
+        this.setState({stop: stop});
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log("Form Layer");
         this.props.onSubmit(this.state);
     }
     
     render() {
-        const routeApi = "https://svc.metrotransit.org/NexTrip/Routes?format=json";
-        const directionApi = "https://svc.metrotransit.org/NexTrip/Directions/" + this.state.route + "?format=json";
-        const stopApi = "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route + "/" + this.state.direction + "?format=json";
+        var routeApi = "https://svc.metrotransit.org/NexTrip/Routes?format=json";
+        var directionApi = "https://svc.metrotransit.org/NexTrip/Directions/" + this.state.route + "?format=json";
+        var stopApi = "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route + "/" + this.state.direction + "?format=json";
         
         return (
             <form onSubmit={this.handleSubmit}>
@@ -125,19 +128,16 @@ class Select extends React.Component {
         switch(name) {
             case ("Route"): 
                 arr.map(x => data.push({value: x.Route, text: x.Description})); 
-                console.log(data);
                 break;
             case ("Direction"): 
                 arr.map(x => data.push({value: x.Value, text: x.Text}));
-                console.log(data);
                 break;
             case ("Stop"): 
                 arr.map(x => data.push({value: x.Value, text: x.Text}));
-                console.log(data);
                 break;
             default: console.log("Name '" + name +"' of select component is not in 'Route', 'Direction', or 'Stop'");
         }
-        this.setState({data:data}, () => console.log(this.state.data));
+        this.setState({data:data});
     }
 
     componentDidMount() {
