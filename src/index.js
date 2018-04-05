@@ -22,10 +22,10 @@ class App extends React.Component {
     
     render() {
         return (
-            <div>
-            <h1>Nextrip Feed</h1>
-            <TripList trips={this.state.trips}/>
-            <NexTripForm onSubmit={this.handleSubmit}/>
+            <div class="px-2">
+                <h1>Nextrip Feed</h1>
+                <TripList trips={this.state.trips}/>
+                <NexTripForm onSubmit={this.handleSubmit}/>
             </div>
         );
     }
@@ -70,13 +70,13 @@ class TripList extends React.Component {
         let arr = this.state.trips;
         if (arr === undefined || arr.length === 0) {
             return (
-                <p>Add a stop below to get the latest departures info!</p>
+                <p>You don't have any saved routes yet! Add a new one below.</p>
             )
         }
         else {
             return (
-                <ul>
-                    {arr.map(x => <li>{x.route}, {x.direction}, {x.stop}, {x.departure}</li>)}
+                <ul class="list-group py-2">
+                    {arr.map(x => <li class="list-group-item">{x.route}, {x.direction}, {x.stop}, {x.departure}</li>)}
                     {/* TODO: render descriptions rather than values */}
                 </ul>
             );
@@ -117,15 +117,21 @@ class NexTripForm extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         this.props.onSubmit(this.state);
+        this.setState({
+            route: null,
+            direction: null,
+            stop: null
+        });
     }
     
     render() {
         var routeApi = "https://svc.metrotransit.org/NexTrip/Routes?format=json";
-        var directionApi = "https://svc.metrotransit.org/NexTrip/Directions/" + this.state.route + "?format=json";
-        var stopApi = "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route + "/" + this.state.direction + "?format=json";
+        var directionApi = (this.state.route!=null) ? "https://svc.metrotransit.org/NexTrip/Directions/" + this.state.route + "?format=json" : "";
+        var stopApi = (this.state.direction!=null) ? "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route + "/" + this.state.direction + "?format=json" : "";
         
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form class="px-2" onSubmit={this.handleSubmit}>
+                <h5>Add a new route: </h5>
                 <Select 
                     name="Route"
                     source={routeApi}
@@ -138,7 +144,7 @@ class NexTripForm extends React.Component {
                     name="Stop"
                     source={stopApi}
                     onChange={this.handleStopChange}/>
-                <input type="submit" value="Submit"/>
+                <input type="submit" value="Save"/>
             </form>
         );
     }
@@ -158,6 +164,7 @@ class Select extends React.Component {
 
     // Fetches data from the API and saves the json array in the component state
     getData(source, name) {
+        if(source==="") {this.mapData([], name);}
         fetch(source)
         .then(response => response.json())
         .then(function(json) {
@@ -200,15 +207,19 @@ class Select extends React.Component {
     }
 
     render() {
+        var defaultOption = (this.state.data.length>0) ? (<option value="" selected disabled hidden>Choose an option...</option>) : (<option value="" disabled hidden>Choose an option...</option>);
         return(
-            <fieldset>
-                <label>
-                    {this.props.name}:
-                    <select onChange={this.handleChange}>
+            <div class="form-group form-row">
+                <div class="col-p-auto">
+                    <label>{this.props.name}:</label> 
+                </div>
+                <div class="col">
+                    <select class="form-control form-control-sm col" onChange={this.handleChange}>
+                        {defaultOption}
                         {this.state.data.map(x => <option value={x.value}>{x.text}</option>)}
                     </select>
-                </label>
-            </fieldset>
+                </div>
+            </div>
         );
     }
 }
