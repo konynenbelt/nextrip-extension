@@ -3,41 +3,72 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class App extends React.Component {
+    // TODO: Make saved trips persistent using chrome extension storage.
     constructor() {
         super();
 
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        this.state = {departures: []};
+        this.state = {trips: []};
     }
 
-    handleSubmit(state) {
-        let departures = this.state.departures;
-        if (!departures.includes(state)) {
-            departures.push(state);
+    handleSubmit(trip) {
+        let trips = this.state.trips;
+        if (!trips.includes(trip)) {
+            trips.push(trip);
         }
-        this.setState({departures: departures}, () => console.log(this.state.departures));
+        this.setState({trips: trips});
     }
     
     render() {
         return (
             <div>
             <h1>Nextrip Feed</h1>
-            <DepartureList departures={this.state.departures}/>
+            <TripList trips={this.state.trips}/>
             <NexTripForm onSubmit={this.handleSubmit}/>
             </div>
         );
     }
 }
 
-class DepartureList extends React.Component {
-    // TODO: Fetch time of next departure for each departure element in the array.
-    // May need a timer to periodically refresh data from the service.
+class TripList extends React.Component {
+    // TODO: need a timer to periodically refresh data from the service.
+    // TODO: make bullet descriptions more useful
+
+    constructor() {
+        super();
+
+        this.state = {trips: []}
+    }
+
+    componentDidMount() {
+        if (!(this.state.trips === undefined || this.state.trips.length === 0)) {
+            let dict = [];
+            this.props.trips.forEach(trip => {
+                this.getDepartures(trip, dict);
+            });
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props!==nextProps) {
+            let arr = [];
+            nextProps.trips.forEach(trip => {
+                fetch("https://svc.metrotransit.org/NexTrip/" + trip.route + "/" + trip.direction + "/" + trip.stop + "?format=json")
+                .then(response => response.json())
+                .then(function(json) {
+                    trip.departure = json[0].DepartureText;
+                    arr.push(trip);
+                })
+                .then(() => this.setState({trips: arr}))
+                .catch(err => console.log(err));
+            });
+        }
+    }
     
     render() {
-        console.log(this.props);
-        console.log(this.props.departures);
-        if (this.props.departures === undefined || this.props.departures.length === 0) {
+        let arr = this.state.trips;
+        if (arr === undefined || arr.length === 0) {
             return (
                 <p>Add a stop below to get the latest departures info!</p>
             )
@@ -45,9 +76,8 @@ class DepartureList extends React.Component {
         else {
             return (
                 <ul>
-                    {this.props.departures.map(x => <li>{x.route}, {x.direction}, {x.stop}</li>)}
-                    {/* TODO: render description rather than value */}
-                    {/* TODO: render time of next departure */}
+                    {arr.map(x => <li>{x.route}, {x.direction}, {x.stop}, {x.departure}</li>)}
+                    {/* TODO: render descriptions rather than values */}
                 </ul>
             );
         }
@@ -63,8 +93,8 @@ class NexTripForm extends React.Component {
         this.handleStopChange = this.handleStopChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         
-        // TODO: update state representation to include value/description pairs for each of route, direction, stop, 
-        // this will allow us to render the description to the UI and use the value for making API calls
+        // TODO: update state representation to include value/description pairs for each route, direction, and stop.
+        // Value for API, description for UI.
         this.state = {
             route: null,
             direction: null,
@@ -126,7 +156,7 @@ class Select extends React.Component {
         this.props.onChange(e.target.value);
     }
 
-    // Fetches data from the API and saves the json array in the object state
+    // Fetches data from the API and saves the json array in the component state
     getData(source, name) {
         fetch(source)
         .then(response => response.json())
