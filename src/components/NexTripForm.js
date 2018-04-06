@@ -62,7 +62,7 @@ export class NexTripForm extends React.Component {
                     name="Stop"
                     source={stopApi}
                     onChange={this.handleStopChange}/>
-                <input class="pull-right" type="submit" value="Save"/>
+                <input class="py-2" type="submit" value="Save"/>
             </form>
         );
     }
