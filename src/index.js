@@ -131,7 +131,7 @@ class NexTripForm extends React.Component {
         
         // TODO: disable submit until form is filled out and state is updated
         return (
-            <form className="px-2" onSubmit={this.handleSubmit}>
+            <form className="p-2" onSubmit={this.handleSubmit}>
                 <h5>Add a new route: </h5>
                 <Select 
                     name="Route"
@@ -145,7 +145,7 @@ class NexTripForm extends React.Component {
                     name="Stop"
                     source={stopApi}
                     onChange={this.handleStopChange}/>
-                <input type="submit" value="Save"/>
+                <input class="pull-right" type="submit" value="Save"/>
             </form>
         );
     }
