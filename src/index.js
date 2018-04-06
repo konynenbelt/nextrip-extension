@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TripList from './components/TripList.js';
 import NexTripForm from './components/NexTripForm.js';
-import css from './index.css';
 
 class App extends React.Component {
     // TODO: Make saved trips persistent using chrome extension storage.
