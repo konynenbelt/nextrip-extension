@@ -22,7 +22,7 @@ class App extends React.Component {
     
     render() {
         return (
-            <div class="px-2">
+            <div className="px-2">
                 <h1>Nextrip Feed</h1>
                 <TripList trips={this.state.trips}/>
                 <NexTripForm onSubmit={this.handleSubmit}/>
@@ -75,8 +75,8 @@ class TripList extends React.Component {
         }
         else {
             return (
-                <ul class="list-group py-2">
-                    {arr.map(x => <li class="list-group-item">{x.route}, {x.direction}, {x.stop}, {x.departure}</li>)}
+                <ul className="list-group py-2">
+                    {arr.map(x => <li className="list-group-item">{x.route}, {x.direction}, {x.stop}, {x.departure}</li>)}
                     {/* TODO: render descriptions rather than values */}
                 </ul>
             );
@@ -129,8 +129,9 @@ class NexTripForm extends React.Component {
         var directionApi = (this.state.route!=null) ? "https://svc.metrotransit.org/NexTrip/Directions/" + this.state.route + "?format=json" : "";
         var stopApi = (this.state.direction!=null) ? "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route + "/" + this.state.direction + "?format=json" : "";
         
+        // TODO: disable submit until form is filled out and state is updated
         return (
-            <form class="px-2" onSubmit={this.handleSubmit}>
+            <form className="px-2" onSubmit={this.handleSubmit}>
                 <h5>Add a new route: </h5>
                 <Select 
                     name="Route"
@@ -209,12 +210,12 @@ class Select extends React.Component {
     render() {
         var defaultOption = (this.state.data.length>0) ? (<option value="" selected disabled hidden>Choose an option...</option>) : (<option value="" disabled hidden>Choose an option...</option>);
         return(
-            <div class="form-group form-row">
-                <div class="col-p-auto">
+            <div className="form-group form-row">
+                <div className="col-p-auto">
                     <label>{this.props.name}:</label> 
                 </div>
-                <div class="col">
-                    <select class="form-control form-control-sm col" onChange={this.handleChange}>
+                <div className="col">
+                    <select className="form-control form-control-sm col" onChange={this.handleChange}>
                         {defaultOption}
                         {this.state.data.map(x => <option value={x.value}>{x.text}</option>)}
                     </select>
