@@ -4,13 +4,20 @@ import TripList from './components/TripList.js';
 import NexTripForm from './components/NexTripForm.js';
 
 class App extends React.Component {
-    // TODO: Make saved trips persistent using chrome extension storage.
+    port;
+    
     constructor() {
         super();
 
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state = {trips: []};
+
+        this.port = chrome.extension.connect({name:"index"});
+
+        this.port.onMessage.addListener(message => {
+            this.setState({trips: message});
+        });
     }
 
     handleSubmit(trip) {
@@ -18,7 +25,8 @@ class App extends React.Component {
         if (!trips.includes(trip)) {
             trips.push(trip);
         }
-        this.setState({trips: trips});
+        this.setState({trips: trips}, () => console.log(this.state.trips));
+        this.port.postMessage(trips);
     }
     
     render() {
