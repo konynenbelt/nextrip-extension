@@ -20,15 +20,15 @@ export class NexTripForm extends React.Component {
     }
 
     handleRouteChange(route) {
-        this.setState({route: route});
+        this.setState({route: JSON.parse(route)});
     }
 
     handleDirectionChange(direction) {
-        this.setState({direction: direction});
+        this.setState({direction: JSON.parse(direction)});
     }
 
     handleStopChange(stop) {
-        this.setState({stop: stop});
+        this.setState({stop: JSON.parse(stop)});
     }
 
     handleSubmit(e) {
@@ -43,8 +43,8 @@ export class NexTripForm extends React.Component {
     
     render() {
         var routeApi = "https://svc.metrotransit.org/NexTrip/Routes?format=json";
-        var directionApi = (this.state.route!=null) ? "https://svc.metrotransit.org/NexTrip/Directions/" + this.state.route + "?format=json" : "";
-        var stopApi = (this.state.direction!=null) ? "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route + "/" + this.state.direction + "?format=json" : "";
+        var directionApi = (this.state.route!=null) ? "https://svc.metrotransit.org/NexTrip/Directions/" + this.state.route.value + "?format=json" : "";
+        var stopApi = (this.state.direction!=null) ? "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route.value + "/" + this.state.direction.value + "?format=json" : "";
         
         // TODO: disable submit until form is filled out and state is updated
         return (

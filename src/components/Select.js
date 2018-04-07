@@ -26,18 +26,18 @@ export class Select extends React.Component {
         .catch(err => console.log(err));
     }
 
-    // Maps the raw json from the request to value:text pairs for the select item
+    // Maps the raw json from the request to value:description pairs for the select item
     mapData(arr, name) {
         var data = [];
         switch(name) {
             case ("Route"): 
-                arr.map(x => data.push({value: x.Route, text: x.Description})); 
+                arr.map(x => data.push({value: x.Route, description: x.Description})); 
                 break;
             case ("Direction"): 
-                arr.map(x => data.push({value: x.Value, text: x.Text}));
+                arr.map(x => data.push({value: x.Value, description: x.Text}));
                 break;
             case ("Stop"): 
-                arr.map(x => data.push({value: x.Value, text: x.Text}));
+                arr.map(x => data.push({value: x.Value, description: x.Text}));
                 break;
             default: console.log("Name '" + name +"' of select component is not in 'Route', 'Direction', or 'Stop'");
         }
@@ -65,7 +65,7 @@ export class Select extends React.Component {
                 <div className="col">
                     <select className="form-control form-control-sm col" onChange={this.handleChange}>
                         {defaultOption}
-                        {this.state.data.map(x => <option value={x.value}>{x.text}</option>)}
+                        {this.state.data.map(x => <option value={JSON.stringify({value: x.value, description: x.description})}>{x.description}</option>)}
                     </select>
                 </div>
             </div>
