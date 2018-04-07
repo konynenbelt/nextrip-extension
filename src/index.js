@@ -10,6 +10,7 @@ class App extends React.Component {
         super();
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleRemove = this.handleRemove.bind(this);
 
         this.state = {trips: []};
 
@@ -25,7 +26,16 @@ class App extends React.Component {
         if (!trips.includes(trip)) {
             trips.push(trip);
         }
-        this.setState({trips: trips}, () => console.log(this.state.trips));
+        this.setState({trips: trips});
+        this.port.postMessage(trips);
+    }
+
+    handleRemove(trip) {
+        let trips = this.state.trips;
+        trips = trips.filter((value) => {
+            value.route != trip.route;
+        });
+        this.setState({trips: trips});
         this.port.postMessage(trips);
     }
     
@@ -33,7 +43,7 @@ class App extends React.Component {
         return (
             <div className="px-2">
                 <h1>Nextrip Feed</h1>
-                <TripList trips={this.state.trips}/>
+                <TripList trips={this.state.trips} onRemove={this.handleRemove}/>
                 <NexTripForm onSubmit={this.handleSubmit}/>
             </div>
         );

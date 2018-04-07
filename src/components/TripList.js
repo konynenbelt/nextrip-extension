@@ -7,6 +7,8 @@ export class TripList extends React.Component {
     constructor() {
         super();
 
+        this.handleClick = this.handleClick.bind(this);
+
         this.state = {trips: []}
     }
 
@@ -34,6 +36,10 @@ export class TripList extends React.Component {
             });
         }
     }
+
+    handleClick(trip) {
+        this.props.onRemove(trip);
+    }
     
     render() {
         let arr = this.state.trips;
@@ -45,7 +51,7 @@ export class TripList extends React.Component {
         else {
             return (
                 <ul className="list-group py-2">
-                    {arr.map(x => <li className="list-group-item">{x.route.description}, {x.direction.description}, {x.stop.description}, {x.departure}</li>)}
+                    {arr.map(x => <li className="list-group-item" onClick={() => {this.handleClick(x)}}>{x.route.description}, {x.direction.description}, {x.stop.description}, {x.departure}</li>)}
                     {/* TODO: render descriptions rather than values */}
                 </ul>
             );
