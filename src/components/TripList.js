@@ -1,39 +1,46 @@
 import React from 'react';
 
 export class TripList extends React.Component {
-    // TODO: need a timer to periodically refresh data from the service.
-    // TODO: make bullet descriptions more useful
 
     constructor() {
         super();
 
         this.handleClick = this.handleClick.bind(this);
 
-        this.state = {trips: []}
+        this.state = {departures: {}}
     }
 
     componentDidMount() {
-        if (!(this.state.trips === undefined || this.state.trips.length === 0)) {
-            let dict = [];
-            this.props.trips.forEach(trip => {
-                this.getDepartures(trip, dict);
+        var trips = this.props.trips;
+        if (!(trips === undefined || Object.keys(trips).length === 0)) {
+            var dict = {};
+            Object.keys(trips).forEach(hashId => {
+                fetch("https://svc.metrotransit.org/NexTrip/" + trips[hashId].route.value + "/" + trips[hashId].direction.value + "/" + trips[hashId].stop.value + "?format=json")
+                .then(response => response.json())
+                .then(function(json) {
+                    dict[hashId] = json[0].DepartureText;
+                })
+                .then(() => this.setState({departures: dict}))
+                .catch(err => console.log(err));
             });
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props!==nextProps) {
-            let arr = [];
-            nextProps.trips.forEach(trip => {
-                fetch("https://svc.metrotransit.org/NexTrip/" + trip.route.value + "/" + trip.direction.value + "/" + trip.stop.value + "?format=json")
-                .then(response => response.json())
-                .then(function(json) {
-                    trip.departure = json[0].DepartureText;
-                    arr.push(trip);
-                })
-                .then(() => this.setState({trips: arr}))
-                .catch(err => console.log(err));
-            });
+            var trips = nextProps.trips;
+            if (!(trips === undefined || Object.keys(trips).length === 0)) {
+                var dict = {};
+                Object.keys(trips).forEach(hashId => {
+                    fetch("https://svc.metrotransit.org/NexTrip/" + trips[hashId].route.value + "/" + trips[hashId].direction.value + "/" + trips[hashId].stop.value + "?format=json")
+                    .then(response => response.json())
+                    .then(function(json) {
+                        dict[hashId] = json[0].DepartureText;
+                    })
+                    .then(() => this.setState({departures: dict}))
+                    .catch(err => console.log(err));
+                });
+            }
         }
     }
 
@@ -42,8 +49,9 @@ export class TripList extends React.Component {
     }
     
     render() {
-        let arr = this.state.trips;
-        if (arr === undefined || arr.length === 0) {
+        let trips = this.props.trips;
+        let departures = this.state.departures;
+        if (trips === undefined || Object.keys(trips).length === 0) {
             return (
                 <p>You don't have any saved routes yet! Add a new one below.</p>
             )
@@ -51,8 +59,7 @@ export class TripList extends React.Component {
         else {
             return (
                 <ul className="list-group py-2">
-                    {arr.map(x => <li className="list-group-item" onClick={() => {this.handleClick(x)}}>{x.route.description}, {x.direction.description}, {x.stop.description}, {x.departure}</li>)}
-                    {/* TODO: render descriptions rather than values */}
+                    {Object.keys(trips).map(x => <li className="list-group-item" onClick={() => {this.handleClick(x)}}>{trips[x].route.description}, {trips[x].direction.description}, {trips[x].stop.description}, {departures[x]}</li>)}
                 </ul>
             );
         }

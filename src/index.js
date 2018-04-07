@@ -5,6 +5,14 @@ import NexTripForm from './components/NexTripForm.js';
 
 class App extends React.Component {
     port;
+
+    // STATE SCHEMA: 
+    // {
+    //     trips: {
+    //         1234: {trip object 1},
+    //         5432: {trip object 2}
+    //     }
+    // }
     
     constructor() {
         super();
@@ -12,7 +20,7 @@ class App extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
 
-        this.state = {trips: []};
+        this.state = {trips: {}};
 
         this.port = chrome.extension.connect({name:"index"});
 
@@ -21,20 +29,22 @@ class App extends React.Component {
         });
     }
 
-    handleSubmit(trip) {
+    handleSubmit(hashId, trip) {
         let trips = this.state.trips;
-        if (!trips.includes(trip)) {
-            trips.push(trip);
+
+        if (!(hashId in trips)) {
+            trips[hashId] = trip;
         }
+
         this.setState({trips: trips});
         this.port.postMessage(trips);
     }
 
-    handleRemove(trip) {
+    handleRemove(hashId) {
         let trips = this.state.trips;
-        trips = trips.filter((value) => {
-            value.route != trip.route;
-        });
+
+        delete trips[hashId];
+
         this.setState({trips: trips});
         this.port.postMessage(trips);
     }
