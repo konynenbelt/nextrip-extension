@@ -18,7 +18,8 @@ export class TripList extends React.Component {
                 fetch("https://svc.metrotransit.org/NexTrip/" + trips[hashId].route.value + "/" + trips[hashId].direction.value + "/" + trips[hashId].stop.value + "?format=json")
                 .then(response => response.json())
                 .then(function(json) {
-                    dict[hashId] = json[0].DepartureText;
+                    console.log(json);
+                    dict[hashId] = (json[0]===undefined) ? "No Scheduled Departures" : json[0].DepartureText;
                 })
                 .then(() => this.setState({departures: dict}))
                 .catch(err => console.log(err));
@@ -35,7 +36,7 @@ export class TripList extends React.Component {
                     fetch("https://svc.metrotransit.org/NexTrip/" + trips[hashId].route.value + "/" + trips[hashId].direction.value + "/" + trips[hashId].stop.value + "?format=json")
                     .then(response => response.json())
                     .then(function(json) {
-                        dict[hashId] = json[0].DepartureText;
+                        dict[hashId] = (json[0]===undefined) ? "No Scheduled Departures" : json[0].DepartureText;
                     })
                     .then(() => this.setState({departures: dict}))
                     .catch(err => console.log(err));
@@ -58,9 +59,18 @@ export class TripList extends React.Component {
         }
         else {
             return (
-                <ul className="list-group py-2">
-                    {Object.keys(trips).map(x => <li className="list-group-item" onClick={() => {this.handleClick(x)}}>{trips[x].route.description}, {trips[x].direction.description}, {trips[x].stop.description}, {departures[x]}</li>)}
-                </ul>
+                <div className="list-group list-group-flush">
+                    {Object.keys(trips).map(x => 
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" onClick={() => {this.handleClick(x)}}>
+                            <h5 class="mb-1 d-flex w-100 justify-content-between">
+                                {trips[x].route.value}
+                                {departures[x]==="No Scheduled Departures" && <span class="badge badge-default">{departures[x]}</span>}
+                                {String(departures[x]).includes("Min") && <span class="badge badge-primary">Nextrip: {departures[x]}</span>}
+                                {String(departures[x]).includes(":") && <span class="badge badge-info">Scheduled: {departures[x]}</span>}
+                            </h5>
+                            <small>{trips[x].direction.description} from {trips[x].stop.description}</small>
+                        </a>)}
+                </div>
             );
         }
     }

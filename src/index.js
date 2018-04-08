@@ -51,8 +51,8 @@ class App extends React.Component {
     
     render() {
         return (
-            <div className="px-2">
-                <h1>Nextrip Feed</h1>
+            <div>
+                <h1 class="p-2">Nextrip Feed</h1>
                 <TripList trips={this.state.trips} onRemove={this.handleRemove}/>
                 <NexTripForm onSubmit={this.handleSubmit}/>
             </div>
