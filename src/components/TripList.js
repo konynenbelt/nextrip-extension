@@ -52,6 +52,7 @@ export class TripList extends React.Component {
     render() {
         let trips = this.props.trips;
         let departures = this.state.departures;
+        console.log(JSON.stringify(departures));
         if (trips === undefined || Object.keys(trips).length === 0) {
             return (
                 <p>You don't have any saved routes yet! Add a new one below.</p>
@@ -60,17 +61,18 @@ export class TripList extends React.Component {
         else {
             return (
                 <div className="list-group list-group-flush">
+                    <small class="px-2 pb-2">Departures legend: <span class="badge badge-pill badge-info">Scheduled</span> <span class="badge badge-pill badge-primary">Real Time</span></small>
                     {Object.keys(trips).map(x => 
                         <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" onClick={() => {this.handleClick(x)}}>
                             <h5 class="mb-1 d-flex w-100 justify-content-between">
                                 {trips[x].route.value}
                                 {departures[x]==="No Scheduled Departures" && <span class="badge badge-default">{departures[x]}</span>}
-                                {String(departures[x]).includes("Min") && <span class="badge badge-primary">Nextrip: {departures[x]}</span>}
-                                {String(departures[x]).includes(":") && <span class="badge badge-info">Scheduled: {departures[x]}</span>}
+                                {String(departures[x]).includes(":") && <span class="badge badge-info">{departures[x]}</span>}
+                                {(String(departures[x]).includes("Min")||String(departures[x]).includes("Due")) && <span class="badge badge-primary">{departures[x]}</span>}
                             </h5>
                             <small>{trips[x].direction.description} from {trips[x].stop.description}</small>
                         </a>)}
-                </div>
+                    </div>
             );
         }
     }

@@ -50,7 +50,6 @@ export class Select extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.source!==nextProps.source) {
-            console.log(this.props.name + " component received new props. New source: " + this.props.source);
             this.getData(nextProps.source, nextProps.name);
         }
     }
