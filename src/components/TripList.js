@@ -18,7 +18,6 @@ export class TripList extends React.Component {
                 fetch("https://svc.metrotransit.org/NexTrip/" + trips[hashId].route.value + "/" + trips[hashId].direction.value + "/" + trips[hashId].stop.value + "?format=json")
                 .then(response => response.json())
                 .then(function(json) {
-                    console.log(json);
                     dict[hashId] = (json[0]===undefined) ? "No Scheduled Departures" : json[0].DepartureText;
                 })
                 .then(() => this.setState({departures: dict}))
@@ -52,7 +51,6 @@ export class TripList extends React.Component {
     render() {
         let trips = this.props.trips;
         let departures = this.state.departures;
-        console.log(JSON.stringify(departures));
         if (trips === undefined || Object.keys(trips).length === 0) {
             return (
                 <p>You don't have any saved routes yet! Add a new one below.</p>
