@@ -53,20 +53,20 @@ export class TripList extends React.Component {
         let departures = this.state.departures;
         if (trips === undefined || Object.keys(trips).length === 0) {
             return (
-                <p>You don't have any saved routes yet! Add a new one below.</p>
+                <p className="px-2">You don't have any saved routes yet! Add a new one below.</p>
             )
         }
         else {
             return (
                 <div className="list-group list-group-flush">
-                    <small class="px-2 pb-2">Departures legend: <span class="badge badge-pill badge-info">Scheduled</span> <span class="badge badge-pill badge-primary">Real Time</span></small>
+                    <span className="px-2 pb-1">Departures: <span className="badge badge-pill badge-info">Scheduled</span> <span className="badge badge-pill badge-primary">Real Time</span></span>
                     {Object.keys(trips).map(x => 
-                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" onClick={() => {this.handleClick(x)}}>
-                            <h5 class="mb-1 d-flex w-100 justify-content-between">
+                        <a data-toggle="tooltip" title="Click to remove" href="#" className="list-group-item list-group-item-action flex-column align-items-start" onClick={() => {this.handleClick(x)}}>
+                            <h5 className="mb-1 d-flex w-100 justify-content-between">
                                 {trips[x].route.value}
-                                {departures[x]==="No Scheduled Departures" && <span class="badge badge-default">{departures[x]}</span>}
-                                {String(departures[x]).includes(":") && <span class="badge badge-info">{departures[x]}</span>}
-                                {(String(departures[x]).includes("Min")||String(departures[x]).includes("Due")) && <span class="badge badge-primary">{departures[x]}</span>}
+                                {departures[x]==="No Scheduled Departures" && <span className="badge badge-pill badge-default">{departures[x]}</span>}
+                                {String(departures[x]).includes(":") && <span className="badge badge-pill badge-info">{departures[x]}</span>}
+                                {(String(departures[x]).includes("Min")||String(departures[x]).includes("Due")) && <span className="badge badge-pill badge-primary">{departures[x]}</span>}
                             </h5>
                             <small>{trips[x].direction.description} from {trips[x].stop.description}</small>
                         </a>)}

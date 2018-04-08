@@ -19,6 +19,7 @@ class App extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
 
         this.state = {trips: {}};
 
@@ -48,11 +49,20 @@ class App extends React.Component {
         this.setState({trips: trips});
         this.port.postMessage(trips);
     }
+
+    handleUpdate() {
+        this.forceUpdate();
+    }
     
     render() {
         return (
             <div>
-                <h1 class="p-2">Nextrip Feed</h1>
+                <h1 className="p-2 d-flex w-100 justify-content-between">
+                    Nextrip Feed 
+                    <button type="button" className="btn btn-success" onClick={this.handleUpdate}>
+                        <span className="fa fa-refresh"></span>
+                    </button>
+                </h1>
                 <TripList trips={this.state.trips} onRemove={this.handleRemove}/>
                 <NexTripForm onSubmit={this.handleSubmit}/>
             </div>

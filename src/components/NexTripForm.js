@@ -48,10 +48,9 @@ export class NexTripForm extends React.Component {
         var directionApi = (this.state.route!=null) ? "https://svc.metrotransit.org/NexTrip/Directions/" + this.state.route.value + "?format=json" : "";
         var stopApi = (this.state.direction!=null) ? "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route.value + "/" + this.state.direction.value + "?format=json" : "";
         
-        // TODO: disable submit until form is filled out and state is updated
         return (
             <form className="p-2" onSubmit={this.handleSubmit}>
-                <h5>Add a new route: </h5>
+                <h4>Add a new route: </h4>
                 <Select 
                     name="Route"
                     source={routeApi}
@@ -64,7 +63,7 @@ export class NexTripForm extends React.Component {
                     name="Stop"
                     source={stopApi}
                     onChange={this.handleStopChange}/>
-                <input class="py-2" type="submit" value="Save"/>
+                <button className="py-2 btn btn-primary" type="submit">Save</button>
             </form>
         );
     }
