@@ -19,14 +19,21 @@ class App extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
-        this.handleUpdate = this.handleUpdate.bind(this);
+        this.handleRefreshClick = this.handleRefreshClick.bind(this);
+        this.handlePlusClick = this.handlePlusClick.bind(this);
 
-        this.state = {trips: {}};
+        this.state = {
+            trips: {},
+            view: ""
+        };
 
         this.port = chrome.extension.connect({name:"index"});
 
         this.port.onMessage.addListener(message => {
-            this.setState({trips: message});
+            this.setState({
+                trips: message,
+                view: (Object.keys(message).length===0) ? "form" : "list"
+            }, () => console.log(this.state.view));
         });
     }
 
@@ -37,7 +44,10 @@ class App extends React.Component {
             trips[hashId] = trip;
         }
 
-        this.setState({trips: trips});
+        this.setState({
+            trips: trips,
+            view: (Object.keys(trips).length===0) ? "form" : "list"
+        });
         this.port.postMessage(trips);
     }
 
@@ -46,25 +56,37 @@ class App extends React.Component {
 
         delete trips[hashId];
 
-        this.setState({trips: trips});
+        this.setState({
+            trips: trips,
+            view: (Object.keys(trips).length===0) ? "form" : "list"
+        });
         this.port.postMessage(trips);
     }
 
-    handleUpdate() {
+    handleRefreshClick() {
         this.forceUpdate();
     }
-    
+
+    handlePlusClick() {
+        this.setState({view: "form"});
+    }
+
     render() {
         return (
             <div>
                 <h1 className="p-2 d-flex w-100 justify-content-between">
                     Nextrip Feed 
-                    <button type="button" className="btn btn-success" onClick={this.handleUpdate}>
-                        <span className="fa fa-refresh"></span>
-                    </button>
+                    <span>   
+                        <button type="button" className="btn btn-primary px-1" onClick={this.handlePlusClick}>
+                            <span className="fa fa-plus"></span>
+                        </button>
+                        <button type="button" className="btn btn-default px-1" onClick={this.handleRefreshClick}>
+                            <span className="fa fa-refresh"></span>
+                        </button>
+                    </span>
                 </h1>
-                <TripList trips={this.state.trips} onRemove={this.handleRemove}/>
-                <NexTripForm onSubmit={this.handleSubmit}/>
+                {this.state.view==="list" && <TripList trips={this.state.trips} onRemove={this.handleRemove}/>}
+                {this.state.view==="form" && <NexTripForm onSubmit={this.handleSubmit}/>}
             </div>
         );
     }

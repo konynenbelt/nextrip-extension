@@ -64,7 +64,7 @@ export class TripList extends React.Component {
                         <a data-toggle="tooltip" title="Click to remove" href="#" className="list-group-item list-group-item-action flex-column align-items-start" onClick={() => {this.handleClick(x)}}>
                             <h5 className="mb-1 d-flex w-100 justify-content-between">
                                 {trips[x].route.value}
-                                {departures[x]==="No Scheduled Departures" && <span className="badge badge-pill badge-default">{departures[x]}</span>}
+                                {departures[x]==="No Scheduled Departures" && <span className="badge badge-pill badge-dark">{departures[x]}</span>}
                                 {String(departures[x]).includes(":") && <span className="badge badge-pill badge-info">{departures[x]}</span>}
                                 {(String(departures[x]).includes("Min")||String(departures[x]).includes("Due")) && <span className="badge badge-pill badge-primary">{departures[x]}</span>}
                             </h5>

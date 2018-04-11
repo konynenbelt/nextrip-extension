@@ -49,7 +49,7 @@ export class NexTripForm extends React.Component {
         var stopApi = (this.state.direction!=null) ? "https://svc.metrotransit.org/NexTrip/Stops/" + this.state.route.value + "/" + this.state.direction.value + "?format=json" : "";
         
         return (
-            <form className="p-2" onSubmit={this.handleSubmit}>
+            <form className="needs-validation p-2" onSubmit={this.handleSubmit}>
                 <h4>Add a new route: </h4>
                 <Select 
                     name="Route"

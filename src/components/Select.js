@@ -62,7 +62,7 @@ export class Select extends React.Component {
                     <label>{this.props.name}:</label> 
                 </div>
                 <div className="col">
-                    <select className="form-control form-control-sm col" onChange={this.handleChange}>
+                    <select className="form-control form-control-sm col" onChange={this.handleChange} required>
                         {defaultOption}
                         {this.state.data.map(x => <option value={JSON.stringify({value: x.value, description: x.description})}>{x.description}</option>)}
                     </select>
