@@ -2,6 +2,8 @@
 
 This Chrome extension uses the MetroTransit NexTrip API to allow users to save their favorite trips and get realtime departure information in a user-friendly format.
 
+Available for Chrome here: https://chrome.google.com/webstore/detail/nextrip-chrome-extension/foojcblikahffemkdamgoppajcfbhajl
+
 ## Getting Started
 1. Clone the repo.
 2. Run `npm install` from the project root to get the required dependencies.
