@@ -11,6 +11,7 @@ export class NexTripForm extends React.Component {
         this.handleDirectionChange = this.handleDirectionChange.bind(this);
         this.handleStopChange = this.handleStopChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
         
         // TODO: update state representation to include value/description pairs for each route, direction, and stop.
         // Value for API, description for UI.
@@ -42,6 +43,10 @@ export class NexTripForm extends React.Component {
             stop: null
         });
     }
+
+    handleCancel() {
+        this.props.onCancel();
+    }
     
     render() {
         var routeApi = "https://svc.metrotransit.org/NexTrip/Routes?format=json";
@@ -63,7 +68,10 @@ export class NexTripForm extends React.Component {
                     name="Stop"
                     source={stopApi}
                     onChange={this.handleStopChange}/>
-                <button className="py-2 btn btn-primary" type="submit">Save</button>
+                <div className="btn-toolbar pull-right pb-2" role="toolbar">
+                    <div className="btn-group ml-2"><button className="py-2 btn btn-primary" type="submit">Save</button></div>
+                    <div className="btn-group ml-2"><button className="py-2 btn btn-secondary" onClick={this.handleCancel}>Cancel</button></div>
+                </div>
             </form>
         );
     }

@@ -19,8 +19,9 @@ class App extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
-        this.handleRefreshClick = this.handleRefreshClick.bind(this);
-        this.handlePlusClick = this.handlePlusClick.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleRefresh = this.handleRefresh.bind(this);
+        this.handleAdd = this.handleAdd.bind(this);
 
         this.state = {
             trips: {},
@@ -33,7 +34,7 @@ class App extends React.Component {
             this.setState({
                 trips: message,
                 view: (Object.keys(message).length===0) ? "form" : "list"
-            }, () => console.log(this.state.view));
+            });
         });
     }
 
@@ -63,30 +64,40 @@ class App extends React.Component {
         this.port.postMessage(trips);
     }
 
-    handleRefreshClick() {
-        this.forceUpdate();
+    handleRefresh() {
+        this.setState({ loading: true });
+        this.forceUpdate(this.setState({ loading: false }));
     }
 
-    handlePlusClick() {
+    handleAdd() {
         this.setState({view: "form"});
+    }
+
+    handleCancel() {
+        this.setState({view: "list"});
     }
 
     render() {
         return (
             <div>
+                {this.state.loading && <p>Fetching latest trip information...</p> }
                 <h1 className="p-2 d-flex w-100 justify-content-between">
-                    Nextrip Feed 
-                    <span>   
-                        <button type="button" className="btn btn-primary px-1" onClick={this.handlePlusClick}>
-                            <span className="fa fa-plus"></span>
-                        </button>
-                        <button type="button" className="btn btn-default px-1" onClick={this.handleRefreshClick}>
-                            <span className="fa fa-refresh"></span>
-                        </button>
-                    </span>
+                    Bus Feed
+                    <div className="btn-toolbar" role="toolbar">
+                        <div className="btn-group ml-2">
+                            <button type="button" className="btn btn-primary" onClick={this.handleAdd}>
+                                <span className="fa fa-plus"></span>
+                            </button>
+                        </div>
+                        <div className="btn-group ml-2">
+                            <button type="button" className="btn btn-secondary" onClick={this.handleRefresh}>
+                                <span className="fa fa-refresh"></span>
+                            </button>
+                        </div>
+                    </div>
                 </h1>
                 {this.state.view==="list" && <TripList trips={this.state.trips} onRemove={this.handleRemove}/>}
-                {this.state.view==="form" && <NexTripForm onSubmit={this.handleSubmit}/>}
+                {this.state.view==="form" && <NexTripForm onSubmit={this.handleSubmit} onCancel={this.handleCancel}/>}
             </div>
         );
     }
