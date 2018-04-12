@@ -9,6 +9,13 @@ This Chrome extension uses the MetroTransit NexTrip API to allow users to save t
 4. Navigate to `chrome://extensions/` and turn on developer mode.
 5. Click "Load Unpacked" and point it to the `dist` directory.
 
+## Built With
+* React - frontend library
+* Bootstrap - so I don't have to do CSS
+* Webpack - module bundler
+* npm - dependency management
+* Google Chrome and it's neat APIs for building extensions
+
 ## Some neat stuff and things I learned
 
 ### On Chrome/React and Webpack
