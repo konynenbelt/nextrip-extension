@@ -25,15 +25,17 @@ class App extends React.Component {
 
         this.state = {
             trips: {},
-            view: ""
+            view: "",
+            loading: true
         };
 
         this.port = chrome.extension.connect({name:"index"});
 
         this.port.onMessage.addListener(message => {
             this.setState({
-                trips: message,
-                view: (message==undefined || Object.keys(message).length===0) ? "form" : "list"
+                trips: (message==undefined || Object.keys(message).length===0) ? {} : message,
+                view: (message==undefined || Object.keys(message).length===0) ? "form" : "list",
+                loading: false
             });
         });
     }

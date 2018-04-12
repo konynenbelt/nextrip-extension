@@ -13,8 +13,6 @@ export class NexTripForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         
-        // TODO: update state representation to include value/description pairs for each route, direction, and stop.
-        // Value for API, description for UI.
         this.state = {
             route: null,
             direction: null,
