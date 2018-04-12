@@ -43,7 +43,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       { from: './public/manifest.json' },
-      { context: './public', from: 'favicon.ico', to: 'assets' }
+      { context: './public', from: 'favicon.png', to: 'assets' }
     ])
   ]
 };
