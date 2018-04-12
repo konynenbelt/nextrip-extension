@@ -33,7 +33,7 @@ class App extends React.Component {
         this.port.onMessage.addListener(message => {
             this.setState({
                 trips: message,
-                view: (Object.keys(message).length===0) ? "form" : "list"
+                view: (message==undefined || Object.keys(message).length===0) ? "form" : "list"
             });
         });
     }
